@@ -1,6 +1,6 @@
 import React from 'react'
 import { NavLink, useNavigate } from 'react-router-dom'
-import { isUserLoggedIn, logout } from '../services/AuthService'
+import { isUserAdmin, isUserLoggedIn, logout } from '../services/AuthService'
 
 export const HeaderComponent = () => { 
   
@@ -22,6 +22,11 @@ export const HeaderComponent = () => {
                       isUserLoggedIn() &&
                       <li className="nav-item">
                         <NavLink className="nav-link" to="/todos">To Do Items</NavLink>
+                      </li>
+                    } {
+                      isUserAdmin() &&
+                      <li className="nav-item">
+                        <NavLink className="nav-link" to="/add-todo">Add Item</NavLink>
                       </li>
                     }
                   </ul>

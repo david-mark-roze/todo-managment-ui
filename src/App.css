@@ -6,6 +6,9 @@
     margin-left: 10px;
 }
 
+.centre {
+    text-align: center;
+}
 .footer {
     position: absolute;
     bottom: 0;

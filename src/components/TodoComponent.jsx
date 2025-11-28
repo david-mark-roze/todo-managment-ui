@@ -53,6 +53,11 @@ const TodoComponent = () => {
     } 
   }
 
+  function cancel(e){
+    e.preventDefault();
+    navigator('/todos')
+  }
+
   function validateForm(){
         let valid = true;
         // Copy all errors - i.e. a 'destructure'(... indicates the 'spread') to the errorsCopy object
@@ -112,8 +117,11 @@ const TodoComponent = () => {
                             <option value="true">Complete</option>
                             <option value="false">Incomplete</option>
                         </select>   
-                    </div>   
-                    <button className='btn btn-success mt-2' onClick={(e) => save(e)} >Save</button>
+                    </div>
+                    <div className='centre'>
+                        <button className='btn btn-success mt-2' onClick={(e) => save(e)} >Save</button>
+                        <button className='btn btn-success mt-2 margin-left-10' onClick={(e) => cancel(e)} >Cancel</button>
+                    </div>
                 </form>
             </div>
         </div>
