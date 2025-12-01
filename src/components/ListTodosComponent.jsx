@@ -24,6 +24,7 @@ const ListTodosComponent = () => {
         deleteTodo(id).then(response => {
             console.log(response.data)
             getAllTodos()
+            deleteModal.current.hide()
         }).catch(error => {
             console.error(error)
         })
@@ -47,13 +48,14 @@ const ListTodosComponent = () => {
         })
    }
 
-   function toggleStatus(e, id, complete){
-        e.preventDefault()
+   function toggleStatus(id, complete){
+        //e.preventDefault()
         if(complete){
             handleReopen(id)
         } else {
             handleComplete(id)
         }
+        statusModal.current.hide();
    }
 
    function openUpdate(e, id){
@@ -64,21 +66,33 @@ const ListTodosComponent = () => {
      // Populate the list of todos with data from the server
    useEffect(() => getAllTodos(), [])
    
-  const modalRef = useRef(null);
+  const statusModal = useRef(null);
+  const deleteModal = useRef(null);
 
-  const [modalTodoId, setModalTodoId] = useState('')
+  const [statusTodoId, setStatusTodoId] = useState('')
   const [modalTodoStatus, setModalTodoStatus] = useState('')
 
+  const [deleteTodoId, setDeleteTodoId] = useState('')
+
   useEffect(() => {
-    const modalElement = document.getElementById("statusModal");
-    modalRef.current = new bootstrap.Modal(modalElement);
+    const statusModalElement = document.getElementById("statusModal");
+    const deleteModalElement = document.getElementById("deleteModal");
+    
+    statusModal.current = new bootstrap.Modal(statusModalElement);
+    deleteModal.current = new bootstrap.Modal(deleteModalElement);
   }, []);
 
-  function openModal(e, id, status) {
+  function openStatusModal(e, id, status) {
     e.preventDefault();
-    setModalTodoId(id)
+    setStatusTodoId(id)
     setModalTodoStatus(status)
-    modalRef.current.show();
+    statusModal.current.show();
+  };
+  
+  function openDeleteModal(e, id) {
+    e.preventDefault();
+    setDeleteTodoId(id)
+    deleteModal.current.show();
   };
 
   return (
@@ -107,12 +121,12 @@ const ListTodosComponent = () => {
                                     adminUser && 
                                     <a href='#' onClick={(e) => openUpdate(e, todo.id)}>Update</a>
                                     
-                                }                                
-                                {/* <a href='#' className='margin-left-10' onClick={(e) => toggleStatus(e, todo.id, todo.complete)}>{todo.complete ? 'Reopen': 'Complete'}</a> */}
-                                <a href='#' className='margin-left-10' onClick={(e) => openModal(e, todo.id, todo.complete)}>{todo.complete ? 'Reopen': 'Complete'}</a>
+                                }
+                                <a href='#' className='margin-left-10' onClick={(e) => openStatusModal(e, todo.id, todo.complete)}>{todo.complete ? 'Reopen': 'Complete'}</a>
                                 {
                                     adminUser &&                                                                
-                                    <a href='#' className='margin-left-10' onClick={() => handleDelete(todo.id)}>Delete</a>
+                                    // <a href='#' className='margin-left-10' onClick={() => handleDelete(todo.id)}>Delete</a>                                                              
+                                    <a href='#' className='margin-left-10' onClick={(e) => openDeleteModal(e, todo.id)}>Delete</a>
                                 }
                             </td>
                         </tr>
@@ -120,34 +134,48 @@ const ListTodosComponent = () => {
                 }
             </tbody>
         </table>
-         <div className="modal fade"id="statusModal"
-        tabIndex="-1"
-        aria-labelledby="confirmModalLabel"
-        aria-hidden="true">
-        <div className="modal-dialog">
-          <div className="modal-content">
-            <div className="modal-header">
-              <h5 className="modal-title" id="confirmModalLabel">Confirm Delete</h5>
-              <button type="button" className="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-
-            <div className="modal-body">
-                <p>{modalTodoId}</p>
-                <p>{modalTodoStatus ? 'Complete' : 'Incomplete'}</p>
-            </div>
-
-            <div className="modal-footer">
-              <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">
-                Cancel
-              </button>
-
-              <button type="button" className="btn btn-danger">
-                Delete
-              </button>
+         <div className="modal fade"id="statusModal" aria-labelledby="statusModalLabel" aria-hidden="true">
+            <div className="modal-dialog">
+              <div className="modal-content">
+                <div className="modal-header">
+                  <h5 className="modal-title" id="statusModalLabel">{modalTodoStatus ? 'Reopen' : 'Complete'} Item</h5>
+                  <button type="button" className="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div className="modal-body">
+                    <p>Are you sure you wish to {modalTodoStatus ? 'Reopen' : 'Complete'} this item?</p>
+                </div>
+                <div className="modal-footer">
+                  <button type="button" className="btn btn-danger" onClick={() => toggleStatus(statusTodoId, modalTodoStatus)}>
+                    Yes
+                  </button>
+                  <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">
+                    Cancel
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
-      </div>
+         <div className="modal fade"id="deleteModal" aria-labelledby="deleteModalLabel" aria-hidden="true">
+            <div className="modal-dialog">
+              <div className="modal-content">
+                <div className="modal-header">
+                  <h5 className="modal-title" id="deleteModalLabel">Delete Item</h5>
+                  <button type="button" className="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div className="modal-body">
+                    <p>Are you sure you wish to delete this item?</p>
+                </div>
+                <div className="modal-footer">
+                  <button type="button" className="btn btn-danger" onClick={() => handleDelete(deleteTodoId)} >
+                    Yes
+                  </button>
+                  <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">
+                    Cancel
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
   )
 }
