@@ -40,14 +40,14 @@ const TodoComponent = () => {
                 console.log(response.data)
                 navigator('/todos')
             }).catch(error=> {
-                console.error(error)
+                handleError(error)
             })
         } else {
             addToDo(todo).then(response => {
                 console.log(response.data)
                 navigator('/todos')
             }).catch(error=> {
-                console.error(error)
+                handleError(error)
             })
         }
     } 
@@ -83,6 +83,15 @@ const TodoComponent = () => {
         // }
         setErrors(errorsCopy)
         return valid;
+    }
+
+    function handleError(error){
+        console.error(error)
+        if(error.response.status == "401"){
+            navigator("/access-error")
+        } else {
+            navigator("/error")
+        }
     }
   return (
     <div className='container mt-3'>

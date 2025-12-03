@@ -11,6 +11,7 @@ export const HeaderComponent = () => {
       navigator('/login')
       window.location.reload()
   }
+  
   return (
     <div>
       <header>

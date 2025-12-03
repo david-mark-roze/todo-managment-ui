@@ -9,6 +9,8 @@ import TodoComponent from './components/TodoComponent'
 import RegisterComponent from './components/RegisterComponent'
 import LoginComponent from './components/LoginComponent'
 import { isUserLoggedIn } from './services/AuthService'
+import AccessErrorComponent from './components/AccessErrorComponent'
+import ErrorComponent from './components/ErrorComponent'
 
 function App() {
 
@@ -28,6 +30,8 @@ function App() {
           <Route path='/register' element={<RegisterComponent/>} />
           <Route path='/' element={<LoginComponent/>} /> 
           <Route path='/login' element={<LoginComponent/>} />
+          <Route path='/access-error' element={<AccessErrorComponent/>} />
+          <Route path='/error' element={<ErrorComponent/>} />
           {/* Activated when calling the to tod list directly */}
           <Route path='/todos' element = {
             <AuthenticatedRoute>
